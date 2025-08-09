@@ -1,0 +1,69 @@
+@import "tailwindcss";
+
+:root {
+  scroll-behavior: smooth;
+  --font-family-primary: "Yekan", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+html,
+body {
+  scroll-behavior: smooth !important;
+}
+
+@font-face {
+  font-family: "Yekan";
+  src: url("./../../public/font/YekanBakhFaNum-Thin.woff") format("truetype");
+  font-weight: 300;
+}
+@font-face {
+  font-family: "Yekan";
+  src: url("./../../public/font/YekanBakhFaNum-Light.woff") format("truetype");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Yekan";
+  src: url("./../../public/font/YekanBakhFaNum-Regular.woff") format("truetype");
+  font-weight: 500;
+}
+@font-face {
+  font-family: "Yekan";
+  src: url("./../../public/font/YekanBakhFaNum-Medium.woff") format("truetype");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Yekan";
+  src: url("./../../public/font/YekanBakhFaNum-Heavy.woff") format("truetype");
+  font-weight: 700;
+}
+@font-face {
+  font-family: "YekanPersianNum";
+  src: url("./../../public/font/YekanBakhFaNum-Fat.woff") format("truetype");
+  font-weight: 800;
+}
+@font-face {
+  font-family: "YekanPersianNum";
+  src: url("./../../public/font/YekanBakhFaNum-Bold.woff") format("truetype");
+  font-weight: 900;
+}
+@font-face {
+  font-family: "Morabba";
+  src: url("./../../public/font/Morabba.ttf") format("truetype");
+  font-weight: normal;
+}
+body {
+  direction: rtl !important;
+  font-family: Yekan !important;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 23px;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: Yekan !important;
+}
+
