@@ -81,14 +81,14 @@ function Navbar() {
                               />
                             )}
 
-                            <span
+                            <h2
                               style={{
                                 color: item === overMenuHover ? "#0E7490" : "",
                               }}
                               className="font-semibold group-hover/2:-translate-x-2 group-hover/2:text-cyan-700 duration-300"
                             >
                               {item.title}
-                            </span>
+                            </h2>
                           </div>
                           <FaChevronLeft
                             style={{
@@ -128,19 +128,19 @@ function Navbar() {
               {overMenuHover?.subMenu &&
                 overMenuHover?.subMenu.length > 0 &&
                 overMenuHover.subMenu.map((item) => (
-                  <div key={item.id}>
-                    <div className="border-b border-[#0002] p-2 flex">
-                      <h2 className="text-lg font-bold cursor-pointer">
+                  <div key={item.id} className="p-2">
+                    <div className="border-b border-[#0002] p-2 flex group/3 cursor-pointer">
+                      <h3 className="text-lg font-semibold  group-hover/3:text-cyan-700 duration-300 group-hover/3:-translate-x-2">
                         {item?.title}
-                      </h2>
+                      </h3>
                     </div>
                     {item?.subMenu && item?.subMenu.length > 0 && (
-                      <div className="flex items-center gap-2 p-2">
+                      <div className="flex items-center gap-8 p-2">
                         {item.subMenu.map((e) => (
                           <div key={e.id}>
-                            <h3 className="font-semibold cursor-pointer">
+                            <h4 className="font-semibold cursor-pointer hover:text-cyan-700 hover:-translate-x-2 duration-300">
                               {e.title}
-                            </h3>
+                            </h4>
                           </div>
                         ))}
                       </div>

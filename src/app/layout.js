@@ -2,7 +2,8 @@ import Layout from "@/components/Layout";
 import "./globals.css";
 
 export const metadata = {
-  description: "خانه عکاسان افرنگ",
+  title: "تناژ مارکت",
+  description: "تناژ مارکت",
   icons: {
     icon: '/images/logo.png'
   }
