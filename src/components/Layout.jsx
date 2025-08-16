@@ -14,6 +14,7 @@ function Layout({ children }) {
   const showHeaderFooter =
     !pathname.includes("/login") &&
     !pathname.includes("/register") &&
+    !pathname.includes("/admin") &&
     !pathname.includes("/forgot-password");
 
   

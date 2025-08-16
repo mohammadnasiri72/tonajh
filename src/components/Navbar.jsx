@@ -1,10 +1,8 @@
 "use client";
 import { Skeleton } from "@mui/material";
-import { Divider } from "antd";
 import axios from "axios";
-import Link from "next/link";
-import React, { useEffect, useRef, useState } from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useEffect, useRef, useState } from "react";
+import { FaChevronRight } from "react-icons/fa";
 import { IoMdMenu } from "react-icons/io";
 
 function Navbar() {
@@ -15,21 +13,23 @@ function Navbar() {
   const [menuData, setMenuData] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  console.log(hoveredLevel2);
+  
+
   const mainCatRef = useRef(null);
   const menuRef = useRef(null);
 
   useEffect(() => {
     if (mainCatRef.current) {
       const rect = mainCatRef.current.getBoundingClientRect();
-      console.log("Top position from viewport:", rect.top);
     }
   }, []);
 
   useEffect(() => {
     setLoading(true);
     axios
-      .get("http://localhost:4000/api/products")
-      .then((res) => {
+      .get("http://localhost:4000/api/categorys")
+      .then((res) => {        
         setMenuData(res.data);
       })
       .catch((err) => {})
@@ -116,12 +116,14 @@ function Navbar() {
                 <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
                   {menuData.length > 0 &&
                     !loading &&
-                    menuData.map((item) => (
+                    menuData
+                    .filter((e)=>e.parentId ===-1)
+                    .map((item) => (
                       <div
-                        key={item.id}
+                        key={item._id}
                         onMouseEnter={() => setHoveredLevel1(item)}
                         className={`p-2 rounded-lg cursor-pointer transition-all duration-200 group ${
-                          hoveredLevel1?.id === item.id
+                          hoveredLevel1?._id === item._id
                             ? "bg-cyan-50 border-r-4 border-cyan-500"
                             : "hover:bg-gray-50"
                         }`}
@@ -148,14 +150,14 @@ function Navbar() {
                               }`}>
                                 {item.title}
                               </h4>
-                              {item.subMenu && (
+                              {menuData.filter((e)=>e.parentId === item?._id ).length>0 && (
                                 <p className="text-xs text-gray-500">
-                                  {item.subMenu.length} زیردسته
+                                  {menuData.filter((e)=>e.parentId === item?._id ).length} زیردسته
                                 </p>
                               )}
                             </div>
                           </div>
-                          {item.subMenu && item.subMenu.length > 0 && (
+                          {menuData.filter((e)=>e.parentId === item?._id ).length>0 && (
                             <FaChevronRight 
                               className={`text-xs transition-all duration-200 ${
                                 hoveredLevel1?.id === item.id ? "text-cyan-600 rotate-180" : "text-gray-400 rotate-90"
@@ -177,7 +179,7 @@ function Navbar() {
             </div>
 
             {/* Level 2 Menu */}
-            {hoveredLevel1 && hoveredLevel1.subMenu && (
+            {menuData.filter((e)=>e.parentId === hoveredLevel1?._id ).length>0 && (
               <div
                 onMouseEnter={() => {
                   setShowMenu(true);
@@ -210,12 +212,13 @@ function Navbar() {
                     <h3 className="text-lg font-bold text-gray-800">{hoveredLevel1.title}</h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {hoveredLevel1.subMenu.map((subItem) => (
+                    {menuData.filter((e)=>e.parentId === hoveredLevel1._id ).map((subItem) => (
                       <div
-                        key={subItem.id}
+                        key={subItem._id}
                         onMouseEnter={() => setHoveredLevel2(subItem)}
+                        // onMouseLeave={()=> setHoveredLevel2(null)}
                         className={`p-2 rounded-lg cursor-pointer transition-all duration-200 group ${
-                          hoveredLevel2?.id === subItem.id
+                          hoveredLevel2?._id === subItem._id
                             ? "bg-green-50 border-r-4 border-green-500"
                             : "hover:bg-gray-50"
                         }`}
@@ -242,17 +245,17 @@ function Navbar() {
                               }`}>
                                 {subItem.title}
                               </h4>
-                              {subItem.subMenu && (
+                              {menuData.filter((e)=>e.parentId === subItem?._id ).length>0 && (
                                 <p className="text-xs text-gray-500">
-                                  {subItem.subMenu.length} زیردسته
+                                  {menuData.filter((e)=>e.parentId === subItem?._id ).length} زیردسته
                                 </p>
                               )}
                             </div>
                           </div>
-                          {subItem.subMenu && subItem.subMenu.length > 0 && (
+                          {menuData.filter((e)=>e.parentId === subItem?._id ).length>0 && (
                             <FaChevronRight 
                               className={`text-xs transition-all duration-200 ${
-                                hoveredLevel2?.id === subItem.id ? "text-green-600 rotate-180" : "text-gray-400 rotate-90"
+                                hoveredLevel2?._id === subItem._id ? "text-green-600 rotate-180" : "text-gray-400 rotate-90"
                               }`}
                             />
                           )}
@@ -265,7 +268,7 @@ function Navbar() {
             )}
 
             {/* Level 3 Menu */}
-            {hoveredLevel2 && hoveredLevel2.subMenu && (
+            { menuData.filter((e)=>e.parentId === hoveredLevel2?._id ).length>0 && (
               <div
                 onMouseEnter={() => {
                   setShowMenu(true);
@@ -299,12 +302,13 @@ function Navbar() {
                     <h3 className="text-lg font-bold text-gray-800">{hoveredLevel2.title}</h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {hoveredLevel2.subMenu.map((subSubItem) => (
+                    {menuData.filter((e)=>e.parentId === hoveredLevel2?._id ).map((subSubItem) => (
                       <div
-                        key={subSubItem.id}
+                        key={subSubItem._id}
                         onMouseEnter={() => setHoveredLevel3(subSubItem)}
+                        // onMouseLeave={()=> setHoveredLevel3(null)}
                         className={`p-2 rounded-lg cursor-pointer transition-all duration-200 group ${
-                          hoveredLevel3?.id === subSubItem.id
+                          hoveredLevel3?._id === subSubItem._id
                             ? "bg-purple-50 border-r-4 border-purple-500"
                             : "hover:bg-gray-50"
                         }`}
@@ -331,17 +335,17 @@ function Navbar() {
                               }`}>
                                 {subSubItem.title}
                               </h4>
-                              {subSubItem.subMenu && (
+                              {menuData.filter((e)=>e.parentId === subSubItem?._id ).length>0 && (
                                 <p className="text-xs text-gray-500">
-                                  {subSubItem.subMenu.length} زیردسته
+                                  {menuData.filter((e)=>e.parentId === subSubItem?._id ).length} زیردسته
                                 </p>
                               )}
                             </div>
                           </div>
-                          {subSubItem.subMenu && subSubItem.subMenu.length > 0 && (
+                          {menuData.filter((e)=>e.parentId === subSubItem?._id ).length>0 && (
                             <FaChevronRight 
                               className={`text-xs transition-all duration-200 ${
-                                hoveredLevel3?.id === subSubItem.id ? "text-purple-600 rotate-180" : "text-gray-400 rotate-90"
+                                hoveredLevel3?._id === subSubItem._id ? "text-purple-600 rotate-180" : "text-gray-400 rotate-90"
                               }`}
                             />
                           )}
@@ -354,7 +358,7 @@ function Navbar() {
             )}
 
             {/* Level 4 Menu */}
-            {hoveredLevel3 && hoveredLevel3.subMenu && (
+            {menuData.filter((e)=>e.parentId === hoveredLevel3?._id ).length>0 && (
               <div
                 onMouseEnter={() => {
                   setShowMenu(true);
@@ -389,7 +393,7 @@ function Navbar() {
                     <h3 className="text-lg font-bold text-gray-800">{hoveredLevel3.title}</h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {hoveredLevel3.subMenu.map((subSubSubItem) => (
+                    {menuData.filter((e)=>e.parentId === hoveredLevel3?._id ).map((subSubSubItem) => (
                       <div
                         key={subSubSubItem.id}
                         className="p-2 rounded-lg cursor-pointer transition-all duration-200 group hover:bg-gray-50"

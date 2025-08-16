@@ -78,7 +78,7 @@ export default function AdminLayout({ children }) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:mr-64">
+      <div className="flex-1 flex flex-col">
         {/* Top Header */}
         <header className="bg-white shadow-sm border-b border-gray-200 h-16 flex items-center justify-between px-6">
           <button
@@ -89,7 +89,7 @@ export default function AdminLayout({ children }) {
           </button>
           
           <div className="flex items-center space-x-4 space-x-reverse">
-            <div className="flex items-center space-x-3 space-x-reverse">
+            <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                 <span className="text-white text-sm font-medium">ا</span>
               </div>
