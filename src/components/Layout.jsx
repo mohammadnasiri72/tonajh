@@ -1,12 +1,10 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import "react-circular-progressbar/dist/styles.css";
 import { Provider } from "react-redux";
 import { store } from "./../redux/store";
-import { usePathname } from "next/navigation";
 import LayoutWrapper from "./LayoutWrapper";
-import { useEffect, useState } from "react";
-import axios from "axios";
 
 function Layout({ children }) {
 

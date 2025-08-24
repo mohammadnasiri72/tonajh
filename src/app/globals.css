@@ -67,6 +67,61 @@ html {
   font-family: Yekan !important;
 }
 
+.ant-btn,
+.ant-input,
+.ant-select,
+.ant-dropdown-menu,
+.ant-modal-content,
+.ant-menu,
+.ant-pagination,
+.ant-breadcrumb,
+.ant-tabs,
+.ant-table,
+.ant-form,
+.ant-message,
+.ant-notification,
+.ant-popover,
+.ant-tooltip,
+.ant-drawer,
+.ant-modal,
+.ant-collapse,
+.ant-steps,
+.ant-radio,
+.ant-checkbox,
+.ant-switch,
+.ant-badge,
+.ant-tag,
+.ant-rate,
+.ant-skeleton,
+.ant-empty,
+.ant-result,
+.ant-descriptions,
+.ant-statistic,
+.ant-alert,
+.ant-timeline {
+  font-family: var(--font-family-primary) !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+div,
+button,
+input,
+select,
+textarea,
+a,
+li,
+td,
+th {
+  font-family: var(--font-family-primary);
+}
+
 /* Custom Scrollbar Styles */
 .custom-scrollbar::-webkit-scrollbar {
   width: 6px !important;
@@ -90,3 +145,6 @@ html {
   scrollbar-color: #cbd5e1 transparent !important;
 }
 
+.bg-auth{
+  background-image: url('./../../public/images/bg-Auth.jpg');
+}

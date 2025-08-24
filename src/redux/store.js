@@ -1,10 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit'
-import activeTabReducer from './slices/activeTab';
+import categoryReducer from './slices/category';
 
 
 export const store = configureStore({
   reducer: {
-    activeTab: activeTabReducer,
+    category: categoryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

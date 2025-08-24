@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { ImUsers } from "react-icons/im";
@@ -68,12 +69,16 @@ function Header() {
 
         <div className="h-8 w-[1px] bg-[#0002] lg:block hidden" />
 
-        <div className="flex flex-col items-center justify-center cursor-pointer hover:bg-slate-100 duration-300 rounded-2xl p-3">
+        <Link href='/login'>
+        
+        <div className="flex flex-col items-center justify-center hover:bg-slate-100 duration-300 rounded-2xl p-3">
           <IoIosLogIn className="text-xl text-teal-500" />
           <span className="text-[#333a] font-semibold whitespace-nowrap">
             ورود / ثبت نام
           </span>
         </div>
+        </Link>
+
       </div>
     </header>
   );
