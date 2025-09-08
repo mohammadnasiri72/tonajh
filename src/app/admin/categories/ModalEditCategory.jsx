@@ -77,7 +77,6 @@ function ModalEditCategory({ setFlag, menuData, categoryEdit }) {
   const [desc, setDesc] = useState("");
   const [valTreeSelect, setValTreeSelect] = useState("-1");
 
-  console.log(categoryEdit);
 
   useEffect(() => {
     if (isModalOpen) {

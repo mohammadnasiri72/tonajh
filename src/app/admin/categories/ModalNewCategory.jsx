@@ -1,10 +1,11 @@
+import { mainDomain } from "@/utils/mainDomain";
 import { Button, Input, Modal, Switch, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useState } from "react";
 import Swal from "sweetalert2";
 import UploaderImg from "./UploaderImg";
-import { mainDomain } from "@/utils/mainDomain";
 
 // تنظیمات Toast
 const Toast = Swal.mixin({
@@ -75,20 +76,21 @@ function ModalNewCategory({ setFlag, menuData }) {
   const [desc, setDesc] = useState("");
   const [valTreeSelect, setValTreeSelect] = useState("-1");
 
+  const token = Cookies.get("token");
 
   const showModal = () => {
     setIsModalOpen(true);
   };
 
-  const resetState =()=>{
-    setTitle('')
-    setIsActive(true)
-    setDesc('')
-    setValTreeSelect("-1")
-  }
+  const resetState = () => {
+    setTitle("");
+    setIsActive(true);
+    setDesc("");
+    setValTreeSelect("-1");
+  };
   const handleCancel = () => {
     setIsModalOpen(false);
-    resetState()
+    resetState();
   };
 
   const handleOk = () => {
@@ -101,7 +103,11 @@ function ModalNewCategory({ setFlag, menuData }) {
     };
 
     axios
-      .post(`${mainDomain}/api/categorys`, data)
+      .post(`${mainDomain}/api/categorys`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then(() => {
         setFlag((e) => !e);
         Toast.fire({
@@ -111,9 +117,10 @@ function ModalNewCategory({ setFlag, menuData }) {
         handleCancel();
       })
       .catch((err) => {
+
         Toast.fire({
           icon: "error",
-          title: "انجام نشد",
+          title: err?.response?.data?.message ? err.response.data.message : "انجام نشد",
         });
       });
   };

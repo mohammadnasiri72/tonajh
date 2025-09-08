@@ -2,7 +2,8 @@ import Header from "./Header";
 import Navbar from "./Navbar";
 import SubHeader from "./SubHeader";
 
-function LayoutWrapper({ children, showHeaderFooter }) {
+function LayoutWrapper({ children, showHeaderFooter , categorys }) {
+  
   if (!showHeaderFooter) {
     return <>{children}</>;
   }
@@ -10,7 +11,7 @@ function LayoutWrapper({ children, showHeaderFooter }) {
     <>
       <SubHeader />
       <Header />
-      <Navbar />
+      <Navbar categorys={categorys}/>
       {children}
     </>
   );

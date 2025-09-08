@@ -1,15 +1,15 @@
 import CategoryMain from "@/components/home/CategoryMain";
+import NewProductsSlider from "@/components/home/NewProductsSlider";
+import NewRequestSlider from "@/components/home/NewRequestSlider";
 import SliderHome from "@/components/home/SliderHome";
 
-
-
 export default async function Home() {
-
-
   return (
-   <>
-   <SliderHome />
-   <CategoryMain />
-   </>
+    <>
+      <SliderHome />
+      <CategoryMain />
+      <NewProductsSlider />
+      <NewRequestSlider />
+    </>
   );
 }

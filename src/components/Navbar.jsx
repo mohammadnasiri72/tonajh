@@ -1,20 +1,17 @@
 "use client";
 import { setMenuData } from "@/redux/slices/category";
-import { mainDomain } from "@/utils/mainDomain";
 import { Skeleton } from "@mui/material";
-import axios from "axios";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { IoMdMenu } from "react-icons/io";
 import { useDispatch, useSelector } from "react-redux";
 
-function Navbar() {
+function Navbar({ categorys }) {
   const { menuData } = useSelector((state) => state.category);
   const [showMenu, setShowMenu] = useState(false);
   const [hoveredLevel1, setHoveredLevel1] = useState(null);
   const [hoveredLevel2, setHoveredLevel2] = useState(null);
   const [hoveredLevel3, setHoveredLevel3] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   const mainCatRef = useRef(null);
   const menuRef = useRef(null);
@@ -22,16 +19,7 @@ function Navbar() {
   const disPatch = useDispatch();
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`${mainDomain}/api/categorys`)
-      .then((res) => {
-        disPatch(setMenuData(res.data.data));
-      })
-      .catch((err) => {})
-      .finally(() => {
-        setLoading(false);
-      });
+    disPatch(setMenuData(categorys));
   }, []);
 
   // Close menu when clicking outside
@@ -114,7 +102,6 @@ function Navbar() {
                 </h3>
                 <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
                   {menuData.length > 0 &&
-                    !loading &&
                     menuData
                       .filter((e) => e.parentId === "-1")
                       .map((item) => (
@@ -184,7 +171,7 @@ function Navbar() {
                           </div>
                         </div>
                       ))}
-                  {loading && (
+                  {menuData.length === 0 && (
                     <div className="space-y-2">
                       {Array.from({ length: 8 }).map((_, i) => (
                         <Skeleton key={i} variant="rectangular" height={40} />

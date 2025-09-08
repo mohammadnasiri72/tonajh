@@ -2,6 +2,7 @@
 import { mainDomain } from "@/utils/mainDomain";
 import { Button, Input } from "antd";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
@@ -83,6 +84,8 @@ export default function LoginPage() {
               ? res?.data?.message
               : "با موفقیت وارد شدید",
           });
+          Cookies.set("token", res.data.token);
+           Cookies.set("user", JSON.stringify(res.data.user));
           router.push("/");
         }
         if (res.data.status === "register") {
@@ -209,8 +212,6 @@ export default function LoginPage() {
                   className="h-20 w-20 object-contain"
                 />
               </div>
-             
-             
             </div>
             <div>
               <Button

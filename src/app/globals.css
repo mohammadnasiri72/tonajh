@@ -148,3 +148,28 @@ th {
 .bg-auth{
   background-image: url('./../../public/images/bg-Auth.jpg');
 }
+
+
+@media (max-width: 640px) {
+  .mySwiperProduct .swiper-pagination {
+    display: block !important; /* نمایش Pagination */
+  }
+}
+/* استایل عمومی بولت‌ها */
+.mySwiperProduct .swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  background: #555; /* رنگ پیش‌فرض */
+  border-radius: 50%; /* حالت دایره‌ای */
+  margin: 0 5px; /* فاصله بین بولت‌ها */
+  transition: 0.5s;
+}
+/* بولت فعال */
+.mySwiperProduct .swiper-pagination-bullet-active {
+  background: #d1182b;
+  border-radius: 10px;
+  width: 20px;
+}
+.mySwiperProduct {
+  padding-bottom: 50px !important;
+}
