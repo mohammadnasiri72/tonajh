@@ -1,15 +1,21 @@
+import Cookies from "js-cookie";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaUsers } from "react-icons/fa";
 import { ImUsers } from "react-icons/im";
 import { IoIosLogIn } from "react-icons/io";
 import { IoClose, IoSearchSharp } from "react-icons/io5";
+import AccountMenu from "./ProfileDropDown";
 
 function Header() {
   const [searchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [token, setToken] = useState("");
+  useEffect(() => {
+    setToken(Cookies.get("token"));
+  }, []);
 
   const handleSearch = () => {};
   return (
@@ -68,17 +74,17 @@ function Header() {
         </div>
 
         <div className="h-8 w-[1px] bg-[#0002] lg:block hidden" />
-
-        <Link href='/login'>
-        
-        <div className="flex flex-col items-center justify-center hover:bg-slate-100 duration-300 rounded-2xl p-3">
-          <IoIosLogIn className="text-xl text-teal-500" />
-          <span className="text-[#333a] font-semibold whitespace-nowrap">
-            ورود / ثبت نام
-          </span>
-        </div>
-        </Link>
-
+        {!token && (
+          <Link href="/login">
+            <div className="flex flex-col items-center justify-center hover:bg-slate-100 duration-300 rounded-2xl p-3">
+              <IoIosLogIn className="text-xl text-teal-500" />
+              <span className="text-[#333a] font-semibold whitespace-nowrap">
+                ورود / ثبت نام
+              </span>
+            </div>
+          </Link>
+        )}
+        {token && <AccountMenu setToken={setToken}/>}
       </div>
     </header>
   );

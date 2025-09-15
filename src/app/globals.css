@@ -145,10 +145,9 @@ th {
   scrollbar-color: #cbd5e1 transparent !important;
 }
 
-.bg-auth{
-  background-image: url('./../../public/images/bg-Auth.jpg');
+.bg-auth {
+  background-image: url("./../../public/images/bg-Auth.jpg");
 }
-
 
 @media (max-width: 640px) {
   .mySwiperProduct .swiper-pagination {
@@ -172,4 +171,22 @@ th {
 }
 .mySwiperProduct {
   padding-bottom: 50px !important;
+}
+
+.bg-transaction {
+  position: relative;
+  z-index: 1;
+}
+.bg-transaction::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-color: #0008;
+  background-blend-mode: multiply;
+  background-image: url("./../../public/images/bg-transaction.jpg");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.8; /* فقط تصویر پس‌زمینه شفاف میشه */
+  z-index: -1;
+  background-attachment: fixed;
 }
