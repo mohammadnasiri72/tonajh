@@ -1,12 +1,12 @@
+import { mainDomain } from "@/utils/mainDomain";
 import { IconButton, Tooltip } from "@mui/material";
-import { Button, Input, Modal, Switch, TreeSelect } from "antd";
+import { Button, Input, Modal, Select, Switch, TreeSelect } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
 import UploaderImg from "./UploaderImg";
-import { mainDomain } from "@/utils/mainDomain";
 
 // تنظیمات Toast
 const Toast = Swal.mixin({
@@ -15,7 +15,7 @@ const Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
-  customClass: "toast-modal",
+  customClass: { container: "toast-modal" },
 });
 
 export const convertToTreeDataWithDisabledLevel3 = (categories) => {
@@ -73,10 +73,11 @@ export const convertToTreeDataWithDisabledLevel3 = (categories) => {
 function ModalEditCategory({ setFlag, menuData, categoryEdit }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("");
+  const [type, setType] = useState("");
+  const [unit, setUnit] = useState(null);
   const [isActive, setIsActive] = useState(true);
   const [desc, setDesc] = useState("");
   const [valTreeSelect, setValTreeSelect] = useState("-1");
-
 
   useEffect(() => {
     if (isModalOpen) {
@@ -105,6 +106,8 @@ function ModalEditCategory({ setFlag, menuData, categoryEdit }) {
   const handleOk = () => {
     const data = {
       title,
+      type,
+      unit,
       parentId: valTreeSelect,
       img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhCZe0e0hWp5eEvMfEsXrAJnl-AxE4IXDOAQ&s",
       description: desc,
@@ -189,6 +192,36 @@ function ModalEditCategory({ setFlag, menuData, categoryEdit }) {
             placeholder="نام دسته بندی (مثل حبوبات)"
           />
         </div>
+        {menuData.find((e) => e._id === valTreeSelect)?.level === 2 && (
+          <div className="mt-3">
+            <Input
+              value={type}
+              onChange={(e) => {
+                setType(e.target.value);
+              }}
+              placeholder="نوع دسته بندی"
+            />
+          </div>
+        )}
+
+        {menuData.find((e) => e._id === valTreeSelect)?.level === 2 && (
+          <div className="mt-3 w-full">
+            <Select
+              className="!w-full"
+              placeholder="واحد اندازه گیری"
+              value={unit}
+              style={{ width: 120 }}
+              onChange={(e) => {
+                setUnit(e);
+              }}
+              options={[
+                { value: "عدد", label: "عدد" },
+                { value: "کیلوگرم", label: "کیلوگرم" },
+                { value: "دستگاه", label: "دستگاه" },
+              ]}
+            />
+          </div>
+        )}
 
         <div className="flex justify-between py-3">
           <UploaderImg />

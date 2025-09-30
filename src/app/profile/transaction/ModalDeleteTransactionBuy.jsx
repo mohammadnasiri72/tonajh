@@ -16,7 +16,7 @@ const Toast = Swal.mixin({
   customClass: { container: "toast-modal" },
 });
 
-function ModalDeleteCategory({ id, setFlag }) {
+function ModalDeleteTransactionBuy({ id, setFlag }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -70,7 +70,7 @@ function ModalDeleteCategory({ id, setFlag }) {
         }}
       >
         <IconButton onClick={showModal}>
-          <FaTrash className="text-xs text-red-500" />
+          <FaTrash className="text-sm text-red-500" />
         </IconButton>
       </Tooltip>
 
@@ -102,4 +102,4 @@ function ModalDeleteCategory({ id, setFlag }) {
   );
 }
 
-export default ModalDeleteCategory;
+export default ModalDeleteTransactionBuy;

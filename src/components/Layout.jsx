@@ -1,5 +1,6 @@
 "use client";
 
+import { store } from "@/redux/store";
 import { createCache, StyleProvider } from "@ant-design/cssinjs";
 import { ConfigProvider } from "antd";
 import faIR from "antd/locale/fa_IR";
@@ -9,8 +10,8 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { FaChevronUp } from "react-icons/fa";
 import { Provider } from "react-redux";
-import { store } from "./../redux/store";
 import LayoutWrapper from "./LayoutWrapper";
+import Loader from "./loader";
 
 function Layout({ children, categorys }) {
   const [cache] = useState(() => createCache());
@@ -33,9 +34,7 @@ function Layout({ children, categorys }) {
     if (!mounted)
       return (
         <>
-          <div className="fixed inset-0 bg-[#fff] flex items-center justify-center !z-[10000000000000] transition-opacity duration-300">
-            <div className="w-8 h-8 border-4 border-[#d1182b] border-t-transparent rounded-full animate-spin" />
-          </div>
+          <Loader />
         </>
       );
 

@@ -1,13 +1,11 @@
 "use client";
-import { setMenuData } from "@/redux/slices/category";
-import { Skeleton } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { FaChevronRight } from "react-icons/fa";
 import { IoMdMenu } from "react-icons/io";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
-function Navbar({ categorys }) {
-  const { menuData } = useSelector((state) => state.category);
+function Navbar() {
+  const { categorys } = useSelector((state) => state.category);
   const [showMenu, setShowMenu] = useState(false);
   const [hoveredLevel1, setHoveredLevel1] = useState(null);
   const [hoveredLevel2, setHoveredLevel2] = useState(null);
@@ -15,12 +13,6 @@ function Navbar({ categorys }) {
 
   const mainCatRef = useRef(null);
   const menuRef = useRef(null);
-
-  const disPatch = useDispatch();
-
-  useEffect(() => {
-    disPatch(setMenuData(categorys));
-  }, []);
 
   // Close menu when clicking outside
   useEffect(() => {
@@ -101,8 +93,8 @@ function Navbar({ categorys }) {
                   دسته‌بندی‌ها
                 </h3>
                 <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                  {menuData.length > 0 &&
-                    menuData
+                  {categorys.length > 0 &&
+                    categorys
                       .filter((e) => e.parentId === "-1")
                       .map((item) => (
                         <div
@@ -144,12 +136,12 @@ function Navbar({ categorys }) {
                                 >
                                   {item.title}
                                 </h4>
-                                {menuData.filter(
+                                {categorys.filter(
                                   (e) => e.parentId === item?._id
                                 ).length > 0 && (
                                   <p className="text-xs text-gray-500">
                                     {
-                                      menuData.filter(
+                                      categorys.filter(
                                         (e) => e.parentId === item?._id
                                       ).length
                                     }{" "}
@@ -158,7 +150,7 @@ function Navbar({ categorys }) {
                                 )}
                               </div>
                             </div>
-                            {menuData.filter((e) => e.parentId === item?._id)
+                            {categorys.filter((e) => e.parentId === item?._id)
                               .length > 0 && (
                               <FaChevronRight
                                 className={`text-xs transition-all duration-200 ${
@@ -171,19 +163,13 @@ function Navbar({ categorys }) {
                           </div>
                         </div>
                       ))}
-                  {menuData.length === 0 && (
-                    <div className="space-y-2">
-                      {Array.from({ length: 8 }).map((_, i) => (
-                        <Skeleton key={i} variant="rectangular" height={40} />
-                      ))}
-                    </div>
-                  )}
+                  
                 </div>
               </div>
             </div>
 
             {/* Level 2 Menu */}
-            {menuData.filter((e) => e.parentId === hoveredLevel1?._id).length >
+            {categorys.filter((e) => e.parentId === hoveredLevel1?._id).length >
               0 && (
               <div
                 onMouseEnter={() => {
@@ -223,7 +209,7 @@ function Navbar({ categorys }) {
                     </h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {menuData
+                    {categorys
                       .filter((e) => e.parentId === hoveredLevel1._id)
                       .map((subItem) => (
                         <div
@@ -266,12 +252,12 @@ function Navbar({ categorys }) {
                                 >
                                   {subItem.title}
                                 </h4>
-                                {menuData.filter(
+                                {categorys.filter(
                                   (e) => e.parentId === subItem?._id
                                 ).length > 0 && (
                                   <p className="text-xs text-gray-500">
                                     {
-                                      menuData.filter(
+                                      categorys.filter(
                                         (e) => e.parentId === subItem?._id
                                       ).length
                                     }{" "}
@@ -280,8 +266,9 @@ function Navbar({ categorys }) {
                                 )}
                               </div>
                             </div>
-                            {menuData.filter((e) => e.parentId === subItem?._id)
-                              .length > 0 && (
+                            {categorys.filter(
+                              (e) => e.parentId === subItem?._id
+                            ).length > 0 && (
                               <FaChevronRight
                                 className={`text-xs transition-all duration-200 ${
                                   hoveredLevel2?._id === subItem._id
@@ -299,7 +286,7 @@ function Navbar({ categorys }) {
             )}
 
             {/* Level 3 Menu */}
-            {menuData.filter((e) => e.parentId === hoveredLevel2?._id).length >
+            {categorys.filter((e) => e.parentId === hoveredLevel2?._id).length >
               0 && (
               <div
                 onMouseEnter={() => {
@@ -340,7 +327,7 @@ function Navbar({ categorys }) {
                     </h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {menuData
+                    {categorys
                       .filter((e) => e.parentId === hoveredLevel2?._id)
                       .map((subSubItem) => (
                         <div
@@ -383,12 +370,12 @@ function Navbar({ categorys }) {
                                 >
                                   {subSubItem.title}
                                 </h4>
-                                {menuData.filter(
+                                {categorys.filter(
                                   (e) => e.parentId === subSubItem?._id
                                 ).length > 0 && (
                                   <p className="text-xs text-gray-500">
                                     {
-                                      menuData.filter(
+                                      categorys.filter(
                                         (e) => e.parentId === subSubItem?._id
                                       ).length
                                     }{" "}
@@ -397,7 +384,7 @@ function Navbar({ categorys }) {
                                 )}
                               </div>
                             </div>
-                            {menuData.filter(
+                            {categorys.filter(
                               (e) => e.parentId === subSubItem?._id
                             ).length > 0 && (
                               <FaChevronRight
@@ -417,7 +404,7 @@ function Navbar({ categorys }) {
             )}
 
             {/* Level 4 Menu */}
-            {menuData.filter((e) => e.parentId === hoveredLevel3?._id).length >
+            {categorys.filter((e) => e.parentId === hoveredLevel3?._id).length >
               0 && (
               <div
                 onMouseEnter={() => {
@@ -459,7 +446,7 @@ function Navbar({ categorys }) {
                     </h3>
                   </div>
                   <div className="flex-1 overflow-y-auto space-y-1 pr-1 custom-scrollbar">
-                    {menuData
+                    {categorys
                       .filter((e) => e.parentId === hoveredLevel3?._id)
                       .map((subSubSubItem) => (
                         <div

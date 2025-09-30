@@ -3,8 +3,7 @@ import Link from "next/link";
 import { useSelector } from "react-redux";
 
 function CategoryMain() {
-  const { menuData } = useSelector((state) => state.category);
-
+const { categorys } = useSelector((state) => state.category);
 
   return (
     <>
@@ -12,8 +11,8 @@ function CategoryMain() {
         دسته بندی های اصلی
       </h2>
       <div className="flex flex-wrap justify-center mt-2">
-        {menuData.length > 0 &&
-          menuData
+        {categorys.length > 0 &&
+          categorys
             .filter((e) => e.parentId === "-1")
             .map((cat) => (
               <div

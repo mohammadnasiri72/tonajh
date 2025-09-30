@@ -19,13 +19,14 @@ const Toast = Swal.mixin({
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
-  customClass: "toast-modal",
+  customClass: { container: "toast-modal" },
 });
 
 export default function LoginPage() {
-  const [step, setStep] = useState(2);
+  const [step, setStep] = useState(0);
   const [loadingStep0, setLoadingStep0] = useState(false);
   const [loadingStep1, setLoadingStep1] = useState(false);
+  const [loadingStep2, setLoadingStep2] = useState(false);
   const [tel, setTel] = useState("");
   const [otp, setOtp] = useState("");
   const paternMobile = /^09[0|1|2|3|9][0-9]{8}$/;
@@ -34,31 +35,51 @@ export default function LoginPage() {
   const [listProvince, setListProvince] = useState([]);
   const [listCities, setListCities] = useState([]);
   const [provinceSelected, setProvinceSelected] = useState(null);
+  const [citiesSelected, setCitiesSelected] = useState(null);
   const [optionsProvince, setOptionsProvince] = useState([]);
+  const [optionsCities, setOptionsCities] = useState([]);
 
-  useEffect(()=>{
-    if (listProvince[0].length > 0) {
-      setOptionsProvince(listProvince[0].map((item) => ({
-    value: item.id,
-    label: item.name,
-  })))
-    }
-  },[listProvince])
-
-
-
-  console.log(optionsProvince);
-
-  // get list province & cities
   useEffect(() => {
-    Promise.all([
-      axios.get(`${mainDomain}/api/province`),
-      axios.get(`${mainDomain}/api/cities`),
-    ]).then((res) => {
-      setListProvince([res[0].data.province]);
-      setListCities([res[1].data.cities]);
+    if (listCities[0]?.length > 0) {
+      setOptionsCities(
+        listCities[0].map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))
+      );
+    }
+  }, [listCities]);
+
+  useEffect(() => {
+    if (listProvince[0]?.length > 0) {
+      setOptionsProvince(
+        listProvince[0].map((item) => ({
+          value: item.id,
+          label: item.name,
+        }))
+      );
+    }
+  }, [listProvince]);
+
+  // get list province
+  useEffect(() => {
+    axios.get(`${mainDomain}/api/province`).then((res) => {
+      setListProvince([res.data.province]);
     });
   }, []);
+
+  const handleSelectProvince = (provinceId) => {
+    setProvinceSelected(provinceId);
+    axios
+      .get(`${mainDomain}/api/cities`, {
+        params: {
+          provinceId,
+        },
+      })
+      .then((res) => {
+        setListCities([res.data.cities]);
+      });
+  };
 
   const router = useRouter();
 
@@ -145,27 +166,39 @@ export default function LoginPage() {
   };
 
   const handleRegister = () => {
-    axios
-      .post(`${mainDomain}/api/auth/register`, {
-        mobile: tel,
-        firstName,
-        lastName,
-        cityId: "5",
-      })
-      .then((res) => {
-        Toast.fire({
-          icon: "success",
-          title: res?.data?.message
-            ? res?.data?.message
-            : "ثبت نام شما با موفقیت انجام شد",
+    if (firstName && lastName && provinceSelected && citiesSelected) {
+      setLoadingStep2(true);
+      axios
+        .post(`${mainDomain}/api/auth/register`, {
+          mobile: tel,
+          firstName,
+          lastName,
+          provinceId: provinceSelected,
+          cityId: citiesSelected,
+        })
+        .then((res) => {
+          Toast.fire({
+            icon: "success",
+            title: res?.data?.message
+              ? res?.data?.message
+              : "ثبت نام شما با موفقیت انجام شد",
+          });
+          Cookies.set("token", res.data.token);
+          Cookies.set("user", JSON.stringify(res.data.user));
+          router.push("/");
+        })
+        .catch((err) => {
+          console.error(err);
+        })
+        .finally(() => {
+          setLoadingStep2(false);
         });
-        Cookies.set("token", res.data.token);
-        Cookies.set("user", JSON.stringify(res.data.user));
-        router.push("/");
-      })
-      .catch((err) => {
-        console.error(err);
+    } else {
+      Toast.fire({
+        icon: "error",
+        title: "لطفا همه موارد را به درستی وارد کنید",
       });
+    }
   };
 
   return (
@@ -324,13 +357,8 @@ export default function LoginPage() {
                       size="large"
                       value={provinceSelected}
                       style={{ width: "100%" }}
-                      onChange={(e) => {
-                        setProvinceSelected(e);
-                      }}
-                      options={[
-                        { value: "1", label: "Jack" },
-                        { value: "lucy", label: "Lucy" },
-                      ]}
+                      onChange={handleSelectProvince}
+                      options={optionsProvince}
                     />
                   </div>
                   <div className="w-full">
@@ -339,28 +367,34 @@ export default function LoginPage() {
                       انتخاب شهر
                     </h3>
                     <Select
-                      disabled
-                      placeholder="ابتدا استان را انتخاب کنید"
+                      disabled={optionsCities.length === 0}
+                      placeholder={
+                        optionsCities.length > 0
+                          ? "انتخاب شهر"
+                          : "ابتدا استان را انتخاب کنید"
+                      }
                       size="large"
-                      value={provinceSelected}
+                      value={citiesSelected}
                       style={{ width: "100%" }}
                       onChange={(e) => {
-                        setProvinceSelected(e);
+                        setCitiesSelected(e);
                       }}
-                      options={[
-                        { value: "1", label: "Jack" },
-                        { value: "lucy", label: "Lucy" },
-                      ]}
+                      options={optionsCities}
                     />
                   </div>
                 </div>
               </div>
               <div>
                 <Button
-                  loading={loadingStep1}
+                  loading={loadingStep2}
                   onClick={handleRegister}
                   id="btn-login"
-                  disabled={otp.length !== 6}
+                  disabled={
+                    !firstName ||
+                    !lastName ||
+                    !provinceSelected ||
+                    !citiesSelected
+                  }
                   size="large"
                   className="w-full"
                   type="primary"
