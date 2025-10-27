@@ -1,7 +1,10 @@
+"use client";
+
 import { createTheme, ThemeProvider } from "@mui/material";
 import Tab from "@mui/material/Tab";
 import Tabs from "@mui/material/Tabs";
 import * as React from "react";
+import { FaShoppingCart, FaStore } from "react-icons/fa";
 import BuyTransaction from "./BuyTransaction";
 import SellTransaction from "./SellTransaction";
 
@@ -9,44 +12,29 @@ const theme = createTheme({
   direction: "rtl",
   typography: {
     fontFamily: '"Yekan", sans-serif',
-    allVariants: {
-      fontFamily: '"Yekan", sans-serif',
-    },
   },
   components: {
-    MuiButton: {
+    MuiTab: {
       styleOverrides: {
         root: {
           fontFamily: '"Yekan", sans-serif',
+          fontSize: "16px",
+          fontWeight: 500,
         },
       },
     },
     MuiTabs: {
       styleOverrides: {
-        root: {
-          fontFamily: '"Yekan", sans-serif',
-          "& .MuiInputLabel-root": {
-            fontFamily: '"Yekan", sans-serif',
-          },
-          "& .MuiInputBase-input": {
-            fontFamily: '"Yekan", sans-serif',
-          },
+        indicator: {
+          backgroundColor: "#3b82f6",
         },
       },
     },
-    MuiTab: {
-      styleOverrides: {
-        root: {
-          fontFamily: '"Yekan", sans-serif',
-        },
-      },
-    },
-    // اضافه کردن سایر کامپوننت‌ها به همین شکل
   },
 });
 
 export default function TabTransaction() {
-  const [value, setValue] = React.useState(1);
+  const [value, setValue] = React.useState(0);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -54,21 +42,32 @@ export default function TabTransaction() {
 
   return (
     <ThemeProvider theme={theme}>
-      <div className="w-full mx-auto text-center flex justify-center items-center mb-2">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="آگهی خرید و فروش"
-        >
-          <Tab sx={{ fontSize: "20px" }} value={1} label="آگهی فروش" />
-          <Tab sx={{ fontSize: "20px" }} value={2} label="آگهی خرید" />
-        </Tabs>
+      <div className="w-full mx-auto mb-6">
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-2">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            aria-label="آگهی خرید و فروش"
+            centered
+          >
+            <Tab 
+              icon={<FaStore className="ml-2" />}
+              iconPosition="start"
+              label="آگهی‌های فروش من"
+            />
+            <Tab 
+              icon={<FaShoppingCart className="ml-2" />}
+              iconPosition="start"
+              label="آگهی‌های خرید من"
+            />
+          </Tabs>
+        </div>
       </div>
-      <div>
-        {value === 1 && <SellTransaction />}
-        {value === 2 && <BuyTransaction />}
+      
+      <div className="min-h-[500px]">
+        {value === 0 && <SellTransaction />}
+        {value === 1 && <BuyTransaction />}
       </div>
     </ThemeProvider>
   );
 }
-

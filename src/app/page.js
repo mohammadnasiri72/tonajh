@@ -1,4 +1,3 @@
-import { DemoHeroGeometric } from "@/components/DemoHeroGeometric";
 import BulkBuyerSection from "@/components/home/BulkBuyerSection";
 import CategoryMain from "@/components/home/CategoryMain";
 import NewProductsSlider from "@/components/home/NewProductsSlider";
@@ -13,7 +12,6 @@ export default async function Home() {
       <CategoryMain />
       <NewProductsSlider />
       <NewRequestSlider />
-      {/* <DemoHeroGeometric /> */}
       <BulkBuyerSection />
       <PlatformIntro />
     </>

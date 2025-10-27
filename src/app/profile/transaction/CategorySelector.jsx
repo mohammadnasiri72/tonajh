@@ -52,23 +52,24 @@ const CategorySelector = ({ categories, selected, setSelected, error }) => {
     return (
       <Row gutter={[16, 16]}>
         {items.map((item) => (
-          <div
-            key={item._id}
-            onClick={() => handleSelect(level, item)}
-            className="w-auto border border-[#0001] rounded-lg p-2 cursor-pointer duration-300 hover:shadow-lg"
-          >
-            <div className="flex flex-col items-center justify-center gap-1">
-              <img
-                alt={item.title}
-                src={item.img}
-                style={{
-                  width: "100px",
-                  objectFit: "cover",
-                  borderTopLeftRadius: 12,
-                  borderTopRightRadius: 12,
-                }}
-              />
-              <span>{item.title}</span>
+          <div key={item._id} className="px-2">
+            <div
+              onClick={() => handleSelect(level, item)}
+              className="w-auto border border-[#0001] rounded-lg p-2 cursor-pointer duration-300 hover:shadow-lg"
+            >
+              <div className="flex flex-col items-center justify-center gap-1">
+                <img
+                  alt={item.title}
+                  src={item.img}
+                  style={{
+                    width: "100px",
+                    objectFit: "cover",
+                    borderTopLeftRadius: 12,
+                    borderTopRightRadius: 12,
+                  }}
+                />
+                <span>{item.title}</span>
+              </div>
             </div>
           </div>
         ))}

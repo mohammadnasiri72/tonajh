@@ -1,4 +1,4 @@
-"use client";
+
 
 import TabTransaction from "./TabTransaction";
 

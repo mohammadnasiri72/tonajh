@@ -1,53 +1,39 @@
+"use client";
+
 import { mainDomain } from "@/utils/mainDomain";
 import {
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  IconButton,
+  TextField,
 } from "@mui/material";
 import { Button, Input } from "antd";
-import TextArea from "antd/es/input/TextArea";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { FaPlus, FaTimes } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import Swal from "sweetalert2";
 import CategorySelector from "./CategorySelector";
 
-// تنظیمات Toast
 const Toast = Swal.mixin({
   toast: true,
   position: "top-start",
   showConfirmButton: false,
   timer: 3000,
   timerProgressBar: true,
-  customClass: { container: "toast-modal" },
 });
 
-// تابع تبدیل اعداد فارسی به انگلیسی (برای پردازش)
 const toEnglishNumber = (number) => {
   const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
   return number.toString().replace(/[۰-۹]/g, (d) => persianDigits.indexOf(d));
 };
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "background.paper",
-  boxShadow: 24,
-  p: 4,
-  maxHeight: "80vh",
-  overflowY: "auto",
-  borderRadius: "20px",
-};
-
 function ModalNewTransactionBuy({ setFlag }) {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   const { categorys } = useSelector((state) => state.category);
   const [loading, setLoading] = useState(false);
   const [selected, setSelected] = useState({
@@ -58,134 +44,185 @@ function ModalNewTransactionBuy({ setFlag }) {
   const [type, setType] = useState("");
   const [unit, setUnit] = useState("");
   const [desc, setDesc] = useState("");
-  const [error, seterror] = useState({
+  const [error, setError] = useState({
     category: false,
     type: false,
     unit: false,
   });
   const token = Cookies.get("token");
+  const router = useRouter();
 
-  console.log(unit);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => {
+    setOpen(false);
+    setSelected({ level1: null, level2: null, level3: null });
+    setType("");
+    setUnit("");
+    setDesc("");
+    setError({ category: false, type: false, unit: false });
+  };
 
   useEffect(() => {
     if (selected.level3) {
-      seterror((prev) => ({
-        ...prev,
-        category: false,
-      }));
+      setError((prev) => ({ ...prev, category: false }));
     }
   }, [selected]);
 
+  const validateForm = () => {
+    const errors = {
+      category: !selected.level3,
+      type: !type.trim(),
+      unit: !unit,
+    };
+    setError(errors);
+    return !Object.values(errors).some(Boolean);
+  };
+
   const buyTransactionHandler = () => {
-    if (!selected.level3) {
-      seterror((prev) => ({
-        ...prev,
-        category: true,
-      }));
-    }
-    if (!type) {
-      seterror((prev) => ({
-        ...prev,
-        type: true,
-      }));
-    }
-    if (!unit) {
-      seterror((prev) => ({
-        ...prev,
-        unit: true,
-      }));
+    if (!validateForm()) {
+      Toast.fire({
+        icon: "warning",
+        title: "لطفا تمام فیلدهای ضروری را پر کنید",
+      });
+      return;
     }
 
-    if (selected.level3 && type && unit) {
-      setLoading(true);
-      const data = {
-        categoryId: selected?.level3?._id,
-        categoryTitle: selected?.level3?.title,
-        type,
-        unit: selected?.level3?.unit,
-        unitAmount: Number(unit.replace(/,/g, "")),
-        description: desc,
-      };
-      axios
-        .post(`${mainDomain}/api/transaction/buy`, data, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then(() => {
-          handleClose();
-          if (setFlag) {
-            setFlag((e) => !e);
-          }
-          Toast.fire({
-            icon: "success",
-            title: "آگهی جدید با موفقیت ثبت شد لطفا منتظر تایید ادمین بمانید",
-          });
-        })
-        .catch((err) => {
-          Toast.fire({
-            icon: "error",
-            title: err?.response?.data?.message
-              ? err.response.data.message
-              : "انجام نشد",
-          });
-        })
-        .finally(() => {
-          setLoading(false);
+    setLoading(true);
+    const data = {
+      categoryId: selected.level3._id,
+      categoryTitle: selected.level3.title,
+      type: type.trim(),
+      unit: selected.level3.unit,
+      unitAmount: Number(toEnglishNumber(unit).replace(/,/g, "")),
+      description: desc.trim(),
+      status: 1,
+      statusTitle: "منتظر تایید",
+    };
+
+    axios
+      .post(`${mainDomain}/api/transaction/buy`, data, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then(() => {
+        handleClose();
+        if (setFlag) {
+          setFlag((prev) => !prev);
+        }
+        Toast.fire({
+          icon: "success",
+          title: "آگهی خرید با موفقیت ثبت شد",
         });
-    }
+      })
+      .catch((err) => {
+        Toast.fire({
+          icon: "error",
+          title: err?.response?.data?.message || "خطا در ثبت آگهی",
+        });
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <>
-      <Button size="large" type="primary" onClick={handleOpen}>
-        ثبت آگهی خرید
-      </Button>
+      {token ? (
+        <Button
+          type="primary"
+          size="large"
+          icon={<FaPlus className="ml-2" />}
+          onClick={handleOpen}
+          className="bg-blue-600 hover:bg-blue-700 border-blue-600"
+        >
+          ثبت آگهی خرید
+        </Button>
+      ) : (
+        <Button
+          type="primary"
+          size="large"
+          icon={<FaPlus className="ml-2" />}
+          onClick={() => {
+            router.push("/login");
+          }}
+          className="bg-blue-600 hover:bg-blue-700 border-blue-600"
+        >
+          ثبت آگهی خرید
+        </Button>
+      )}
 
       <Dialog
         open={open}
-        keepMounted
         onClose={handleClose}
-        aria-describedby="alert-dialog-slide-description"
+        maxWidth="md"
+        fullWidth
+        slotProps={{
+          paper: {
+            sx: { borderRadius: 3 },
+          },
+        }}
       >
-        <DialogTitle>
-          <span className="text-2xl font-semibold">ثبت آگهی جدید</span>
+        <DialogTitle className="bg-gradient-to-r from-blue-500 to-blue-600 text-white !px-3 !py-1 !mb-2">
+          <div className="flex justify-between items-center">
+            <div className="flex items-center gap-2">
+              <FaPlus />
+              <span className="text-lg font-semibold">ثبت آگهی خرید جدید</span>
+            </div>
+            <IconButton
+              onClick={handleClose}
+              className="!text-white hover:bg-white/20"
+            >
+              <FaTimes />
+            </IconButton>
+          </div>
         </DialogTitle>
-        <DialogContent>
-          <div className="flex flex-wrap items-center mt-3 gap-2">
-            <div className="w-full">
+
+        <DialogContent className="p-6">
+          <div className="space-y-4">
+            {/* دسته‌بندی */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                دسته‌بندی *
+              </label>
               <CategorySelector
                 categories={categorys}
                 selected={selected}
                 setSelected={setSelected}
                 error={error}
               />
+              {error.category && (
+                <span className="text-red-500 text-xs mt-1">
+                  لطفا دسته‌بندی را انتخاب کنید
+                </span>
+              )}
             </div>
-            <div className="w-full mt-3">
+
+            {/* نوع محصول */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                نوع محصول *
+              </label>
               <Input
                 status={error.type ? "error" : ""}
                 size="large"
                 value={type}
                 onChange={(e) => {
                   setType(e.target.value);
-                  seterror((prev) => ({
-                    ...prev,
-                    type: false,
-                  }));
+                  setError((prev) => ({ ...prev, type: false }));
                 }}
-                placeholder={`نوع محصول ${
-                  selected?.level3?.type
-                    ? `مثلا (${selected?.level3?.type})`
-                    : ""
-                }`}
+                placeholder={`مثلاً ${selected?.level3?.type || "..."}`}
               />
               {error.type && (
-                <span className="text-red-500 text-xs">
-                  * لطفا نوع محصول را وارد کنید
+                <span className="text-red-500 text-xs mt-1">
+                  لطفا نوع محصول را وارد کنید
                 </span>
               )}
             </div>
-            <div className="w-full mt-3">
+
+            {/* میزان نیازمندی */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                میزان نیازمندی *
+              </label>
               <Input
                 status={error.unit ? "error" : ""}
                 size="large"
@@ -197,45 +234,72 @@ function ModalNewTransactionBuy({ setFlag }) {
                     const formatted =
                       raw === "" ? "" : Number(raw).toLocaleString();
                     setUnit(formatted);
-                    seterror((prev) => ({
-                      ...prev,
-                      unit: false,
-                    }));
+                    setError((prev) => ({ ...prev, unit: false }));
                   }
                 }}
                 placeholder="میزان نیازمندی محصول"
               />
               {error.unit && (
-                <span className="text-red-500 text-xs">
-                  * لطفا میزان نیازمندی محصول را وارد کنید
+                <span className="text-red-500 text-xs mt-1">
+                  لطفا میزان نیازمندی را وارد کنید
                 </span>
               )}
             </div>
-            <div className="w-full mt-3">
-              <TextArea
-                value={desc}
-                onChange={(e) => {
-                  setDesc(e.target.value);
+
+            {/* توضیحات */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                توضیحات
+              </label>
+              <TextField
+                sx={{
+                  fontFamily: "Yekan, sans-serif",
+                  "& .MuiInputBase-input": {
+                    fontFamily: "Yekan, sans-serif",
+                  },
+                  "& .MuiFormHelperText-root": {
+                    fontFamily: "Yekan, sans-serif",
+                  },
                 }}
+                value={desc}
+                onChange={(e) => setDesc(e.target.value)}
+                multiline
                 rows={4}
-                placeholder="توضیحات (اختیاری)"
+                placeholder="توضیحات اختیاری درباره درخواست خرید..."
+                fullWidth
+                variant="outlined"
+                size="medium"
+                slotProps={{
+                  htmlInput: {
+                    maxLength: 500,
+                  },
+                  formHelperText: {
+                    style: {
+                      textAlign: "left",
+                      marginLeft: 0,
+                      marginRight: 0,
+                    },
+                  },
+                }}
+                helperText={`${desc.length}/500`}
               />
             </div>
           </div>
         </DialogContent>
-        <DialogActions>
-          <div className="mt-3 w-full">
-            <Button
-              size="large"
-              className="!w-full"
-              key="submit"
-              type="primary"
-              loading={loading}
-              onClick={buyTransactionHandler}
-            >
-              ثبت درخواست
-            </Button>
-          </div>
+
+        <DialogActions className="p-4 gap-2">
+          <Button size="large" onClick={handleClose} className="flex-1">
+            انصراف
+          </Button>
+          <Button
+            size="large"
+            type="primary"
+            loading={loading}
+            onClick={buyTransactionHandler}
+            className="flex-1 bg-blue-600 hover:bg-blue-700 border-blue-600"
+          >
+            {loading ? "در حال ثبت..." : "ثبت آگهی خرید"}
+          </Button>
         </DialogActions>
       </Dialog>
     </>

@@ -14,7 +14,6 @@ export const metadata = {
 export default async function RootLayout({ children }) {
   const categorys = await getCategory();
 
-  
 
   return (
     <html lang="fa" dir="rtl">

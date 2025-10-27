@@ -21,18 +21,20 @@ function Header() {
   return (
     <header className="bg-white shadow-md py-2 px-6 flex items-center justify-between">
       <div className="flex items-center gap-3">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10">
-            <img
-              src="/images/logo.png"
-              alt="لوگو"
-              className="h-10 w-10 object-contain"
-            />
+        <Link href={"/"}>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10">
+              <img
+                src="/images/logo.png"
+                alt="لوگو"
+                className="h-10 w-10 object-contain"
+              />
+            </div>
+            <span className="text-2xl font-bold text-gray-800 hidden lg:inline">
+              تناژ مارکت
+            </span>
           </div>
-          <span className="text-2xl font-bold text-gray-800 hidden lg:inline">
-            تناژ مارکت
-          </span>
-        </div>
+        </Link>
         <div>
           <div className="px-3 flex items-center justify-start rounded-lg bg-slate-200 lg:w-96 w-full">
             <IoSearchSharp className="text-2xl cursor-pointer" />
@@ -84,7 +86,7 @@ function Header() {
             </div>
           </Link>
         )}
-        {token && <AccountMenu setToken={setToken}/>}
+        {token && <AccountMenu setToken={setToken} />}
       </div>
     </header>
   );

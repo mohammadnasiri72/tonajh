@@ -50,7 +50,6 @@ const EditeProfile = () => {
     try {
       // شبیه‌سازی ارسال داده به سرور
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      console.log("Profile data:", values);
       message.success("پروفایل با موفقیت به‌روزرسانی شد");
     } catch (error) {
       message.error("خطا در به‌روزرسانی پروفایل");
@@ -61,7 +60,6 @@ const EditeProfile = () => {
 
   const handlePasswordChange = async (values) => {
     try {
-      console.log("Password change data:", values);
       message.success("رمز عبور با موفقیت تغییر یافت");
       passwordForm.resetFields();
     } catch (error) {

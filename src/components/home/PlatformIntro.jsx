@@ -1,6 +1,6 @@
-import Link from "next/link";
+import ModalNewTransactionBuy from "@/app/profile/transaction/ModalNewTransactionBuy";
+import ModalNewTransactionSell from "@/app/profile/transaction/ModalNewTransactionSell";
 import {
-  FaAngleLeft,
   FaChartLine,
   FaComments,
   FaHandshake,
@@ -61,14 +61,7 @@ const PlatformIntro = () => {
                 </li>
               </ul>
               <div className="text-center">
-               
-                <Link
-                  href={"/profile/transaction"}
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-300"
-                >
-                  <span>ثبت آگهی خرید</span>
-                  <FaAngleLeft />
-                </Link>
+                <ModalNewTransactionBuy />
               </div>
             </div>
           </div>
@@ -113,14 +106,7 @@ const PlatformIntro = () => {
                 </li>
               </ul>
               <div className="text-center">
-               
-                 <Link
-                  href={"/profile/transaction"}
-                  className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition-colors duration-300"
-                >
-                  <span>ثبت آگهی فروش</span>
-                  <FaAngleLeft />
-                </Link>
+                <ModalNewTransactionSell />
               </div>
             </div>
           </div>
